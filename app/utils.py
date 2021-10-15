@@ -10,6 +10,7 @@ requests_cache.install_cache('youtube')
 
 dotenv.load_dotenv()
 
+SECRET_KEY = os.environ.get('SECRET_KEY')
 API_KEY = os.environ.get('API_KEY')
 
 

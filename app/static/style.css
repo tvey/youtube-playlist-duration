@@ -1,24 +1,128 @@
+:root {
+  --dark-color: #181313;
+  --light-color:  #f6f6f6;
+  --accent-color: #fb4443;
+  --max-width: 700px;
+  --b-radius: 6px;
+  --b-width: 3px;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  font-size: 18px;
+  min-height: 100%;
+}
+
 body {
-  font-family: 'Roboto', sans-serif;
+  min-height: 100%;
   height: 100vh;
-  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.5;
+  background: var(--dark-color);
+  color: var(--light-color);
   box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 }
 
+ul,
+ol {
+  list-style: none;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+h1, h2, p {
+  margin-bottom: 0.75rem;
+}
+
+.container {
+  max-width: var(--max-width);
+  overflow: hidden;
+  margin: 5rem auto 1rem auto;
+  padding: 2rem;
+}
+
+.d-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.center {
+  justify-content: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
 main {
-  margin-bottom: 10rem;
+  flex: 1;
+  margin-top: 5rem;
 }
 
-.cover-container {
-  max-width: 42em;
+#pl-form input {
+  display: block;
+  width: 100%;
+  text-align: center;
+  border-radius: var(--b-radius);
+  padding: 0.7rem 0.75rem;
+  margin-bottom: 1.5rem;
+  outline: 0 none;
+  border: var(--b-width) solid #ccc;
+  transition: border-color .2s ease-in-out;
 }
 
-/* Custom default button */
-.btn-secondary,
-.btn-secondary:hover,
-.btn-secondary:focus {
-  color: #333;
-  text-shadow: none; /* Prevent inheritance from `body` */
+#pl-form input:focus {
+  border: var(--b-width) solid var(--accent-color);
 }
 
+#pl-form input:focus::placeholder {
+  color: #fd9090;
+}
 
+#pl-form button {
+  color: inherit;
+  font-size: 1.2rem;
+  background: var(--accent-color);
+  border-radius: var(--b-radius);
+  padding: 0.8rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border: none;
+  opacity: 0.9;
+  transition: all .2s ease-in-out;
+}
+
+.flashes li {
+  background: #fffcfc;
+  color:  var(--accent-color);
+  font-size: 0.9rem;
+  border: 1px solid var(--accent-color);
+  border-radius: var(--b-radius);
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.fade-out {
+  animation: fadeOut ease 10s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
