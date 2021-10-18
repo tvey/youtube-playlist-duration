@@ -23,12 +23,12 @@
       {% endwith %}
       <h1>YouTube Playlist Duration</h1>
       <p>Paste a playlist link or id below.</p>
-      <form action="{{ url_for('home') }}" method="post" id="pl-form" class="text-center">
+      <form method="post" action="{{ url_for('home') }}" id="playlist-form">
         <input type="text" name="playlist" placeholder="https://www.youtube.com/playlist?list=ID">
-        <button type="submit" class="btn" id="calculate">Calculate</button>
+        <button type="submit" class="btn">Calculate</button>
       </form>
       <div class="spinner"></div>
-      <h2 class="py-3" id="result"></h2>
+      <h2 id="result"></h2>
     </main>
   </div>
   <script src="{{ url_for('static', filename='script.js') }}"></script>

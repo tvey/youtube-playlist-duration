@@ -1,5 +1,5 @@
 :root {
-  --dark-color: #181313;
+  --dark-color: #000c17;
   --light-color:  #f6f6f6;
   --accent-color: #fb4443;
   --max-width: 700px;
@@ -13,23 +13,20 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+
 }
 
 html {
   font-size: 18px;
-  height: 100%;
 }
 
 body {
-  height: 100%;
-  /*min-height: 100vh;*/
+  height: 100vh;
   font-family: 'Roboto', sans-serif;
   line-height: 1.5;
   background: var(--dark-color);
-  background: linear-gradient(#var(--dark-color) 0%, #4b86be 100%);
   background-size: 100% auto;
   color: var(--light-color);
-  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 }
 
 ul,
@@ -49,7 +46,7 @@ h1, h2, p {
 .container {
   max-width: var(--max-width);
   overflow: hidden;
-  margin: 5rem auto 1rem auto;
+  margin: 0 auto 0 auto;
   padding: 2rem;
 }
 
@@ -83,11 +80,11 @@ h1, h2, p {
 }
 
 main {
-  flex: 1;;
-  /*margin-top: 5rem;*/
+  flex: 1;
+  margin-top: 6rem;
 }
 
-#pl-form input {
+#playlist-form input {
   display: block;
   width: 100%;
   text-align: center;
@@ -99,15 +96,15 @@ main {
   transition: border-color .2s ease-in-out;
 }
 
-#pl-form input:focus {
+#playlist-form input:focus {
   border: var(--b-width) solid var(--accent-color);
 }
 
-#pl-form input:focus::placeholder {
-  color: #fd9090;
+#playlist-form input:focus::placeholder {
+  color: #feb7b7;
 }
 
-#pl-form .btn {
+#playlist-form .btn {
   background: var(--accent-color);
   margin-bottom: 1.5rem;
 }

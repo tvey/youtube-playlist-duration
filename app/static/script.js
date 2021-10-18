@@ -1,16 +1,34 @@
-let playlistForm = document.getElementById('pl-form')
+let playlistForm = document.getElementById('playlist-form')
+let playlistInput = document.querySelector('input[name=playlist]')
 let resultElem = document.getElementById('result')
 
 let flashes = document.querySelectorAll('.flashes li')
 let spinner = document.querySelector('.spinner')
 
+playlistForm.addEventListener('submit', async () => {
+  let playlistValue = playlistInput.value
+  if (playlistValue) {
+    spinner.style.display = 'block'
+    let result = await getResult(playlistValue)
+    spinner.style.display = 'none'
+    console.log(`Playlist duration: ${result['duration']}`)
+    window.location.href = '/'
+    resultElem.innerText = result['duration']
+  }
+})
 
-playlistForm.addEventListener('submit', getResult)
-
-async function getResult() {
-  const response = await fetch('/result')
+async function getResult(playlistValue) {
+  const response = await fetch('/result', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    body: JSON.stringify({'playlist': playlistValue})
+    },
+  )
   const result = await response.json()
-  resultElem.innerText = `Playlist duration: ${result}`
+  return result
 }
 
 setTimeout(() => {
