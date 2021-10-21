@@ -5,14 +5,14 @@ let resultElem = document.getElementById('result')
 let flashes = document.querySelectorAll('.flashes li')
 let spinner = document.querySelector('.spinner')
 
-playlistForm.addEventListener('submit', async () => {
+playlistForm.addEventListener('submit', async (e) => {
+  e.preventDefault()
   let playlistValue = playlistInput.value
   if (playlistValue) {
     spinner.style.display = 'block'
     let result = await getResult(playlistValue)
     spinner.style.display = 'none'
     console.log(`Playlist duration: ${result['duration']}`)
-    window.location.href = '/'
     resultElem.innerText = result['duration']
   }
 })
