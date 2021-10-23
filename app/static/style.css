@@ -109,14 +109,8 @@ main {
   margin-bottom: 1.5rem;
 }
 
-.flashes li {
-  background: #fffcfc;
-  color:  var(--accent-color);
-  font-size: 0.9rem;
-  border: 1px solid var(--accent-color);
-  border-radius: var(--b-radius);
-  padding: 0.9rem 1.1rem;
-  margin-bottom: 1rem;
+.error {
+  color: var(--accent-color);
 }
 
 @media (max-width: 768px) {

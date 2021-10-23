@@ -12,15 +12,6 @@
 <body class="text-center">
   <div class="container d-flex center">
     <main>
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul class="flashes">
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-          </ul>
-        {% endif %}
-      {% endwith %}
       <h1>YouTube Playlist Duration</h1>
       <p>Paste a playlist link or id below.</p>
       <form method="post" action="{{ url_for('home') }}" id="playlist-form">
@@ -28,7 +19,7 @@
         <button type="submit" class="btn">Calculate</button>
       </form>
       <div class="spinner"></div>
-      <h2 id="result"></h2>
+      <div id="result"></div>
     </main>
   </div>
   <script src="{{ url_for('static', filename='script.js') }}"></script>

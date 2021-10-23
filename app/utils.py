@@ -14,15 +14,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 API_KEY = os.environ.get('API_KEY')
 
 
-def get_playlist_id(value):
-    playlist_pattern = r'PL[\w-]{12,34}'
-    match = re.search(playlist_pattern, value)
-
-    if match:
-        return match.group()
-    return ''
-
-
 def format_time(seconds, days=False):
     if days:
         d, s = divmod(seconds, 86400)
@@ -35,7 +26,11 @@ def format_time(seconds, days=False):
 
     h, s = divmod(seconds, 3600)
     m, s = divmod(s, 60)
-    return f'{h:02.0f}:{m:02.0f}:{s:02.0f}'
+    return f'{h:02.0f}:{m:02.0f}:{s:02.0f}'  # format for now
+
+
+def format_result():
+    pass
 
 
 def calculate_duration(data) -> float:
@@ -77,6 +72,9 @@ def get_result(playlist_id):
     while True:
         r = requests.get(url, params=params)
         data = r.json()
+
+        if not data.get('items'):
+            return ''
 
         video_ids = [
             v['snippet']['resourceId']['videoId'] for v in data['items']
