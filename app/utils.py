@@ -41,14 +41,14 @@ def calculate_duration(data) -> float:
     return sum(durations)
 
 
-def get_video_duration(video_ids):
-    """Accept a list of video ids and return their total duration."""
+def get_duration(item_ids):
+    """Accept a list of item ids and return their total duration."""
     url = 'https://www.googleapis.com/youtube/v3/videos'
 
     params = {
         'key': API_KEY,
         'part': ['contentDetails'],
-        'id': ','.join(video_ids),
+        'id': ','.join(item_ids),
         'fields': 'items/contentDetails/duration',
     }
 
@@ -76,10 +76,10 @@ def get_result(playlist_id):
         if not data.get('items'):
             return ''
 
-        video_ids = [
+        item_ids = [
             v['snippet']['resourceId']['videoId'] for v in data['items']
         ]
-        total_duration += get_video_duration(video_ids)
+        total_duration += get_duration(item_ids)
         next_page_token = data.get('nextPageToken')
 
         if not next_page_token:

@@ -8,11 +8,11 @@ playlistForm.addEventListener('submit', async (e) => {
   e.preventDefault()
   resultElem.innerText = ''
   let playlistValue = playlistInput.value
-  let playlistId = playlistValue.match(/PL[\w-]{12,34}/)
+  let playlistId = playlistValue.match(/PL[\w-]{16,34}|OLAK[\w-]{37}/)
 
   if (playlistId) {
     spinner.style.display = 'block'
-    let result = await getResult(playlistId)
+    let result = await getResult(playlistId[0])
     if (result['duration']) {
       spinner.style.display = 'none'
       resultElem.innerHTML = `<h2>${result['duration']}</h2>`
