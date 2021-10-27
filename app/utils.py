@@ -1,5 +1,4 @@
 import os
-import re
 
 import requests
 import dotenv
@@ -20,10 +19,6 @@ def format_time(seconds, days=False):
         h, s = divmod(s, 3600)
         m, s = divmod(s, 60)
 
-        if s > 30:
-            m += 1
-        return
-
     h, s = divmod(seconds, 3600)
     m, s = divmod(s, 60)
     return f'{h:02.0f}:{m:02.0f}:{s:02.0f}'  # format for now
@@ -33,15 +28,7 @@ def format_result():
     pass
 
 
-def calculate_duration(data) -> float:
-    durations = [
-        isodate.parse_duration(i['contentDetails']['duration']).total_seconds()
-        for i in data
-    ]
-    return sum(durations)
-
-
-def get_duration(item_ids):
+def get_duration(item_ids) -> float:
     """Accept a list of item ids and return their total duration."""
     url = 'https://www.googleapis.com/youtube/v3/videos'
 
@@ -54,10 +41,23 @@ def get_duration(item_ids):
 
     r = requests.get(url, params=params)
     items = r.json().get('items')
-    return calculate_duration(items)
+    if items:
+        durations = [
+            isodate.parse_duration(
+                i['contentDetails']['duration']
+            ).total_seconds()
+            for i in items
+        ]
+        return sum(durations)
+    return 0
 
 
 def get_result(playlist_id):
+    """Calculate playlist duration.
+
+    Return playlist/album duration as a formatted string based on a valid id.
+    In case of an invalid id return an API error message or an empty string.
+    """
     url = 'https://www.googleapis.com/youtube/v3/playlistItems'
     params = {
         'key': API_KEY,
@@ -74,7 +74,10 @@ def get_result(playlist_id):
         data = r.json()
 
         if not data.get('items'):
-            return ''
+            if data.get('error'):
+                return {'error': data.get('error').get('message')}
+            else:
+                return {}
 
         item_ids = [
             v['snippet']['resourceId']['videoId'] for v in data['items']
@@ -86,4 +89,4 @@ def get_result(playlist_id):
             break
         params['pageToken'] = next_page_token
 
-    return format_time(total_duration)
+    return {'duration': format_time(total_duration)}

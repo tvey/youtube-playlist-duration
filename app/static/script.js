@@ -4,11 +4,15 @@ let resultElem = document.getElementById('result')
 
 let spinner = document.querySelector('.spinner')
 
+spinner.style.display = 'none'
+
+
 playlistForm.addEventListener('submit', async (e) => {
   e.preventDefault()
   resultElem.innerText = ''
   let playlistValue = playlistInput.value
-  let playlistId = playlistValue.match(/PL[\w-]{16,34}|OLAK[\w-]{37}/)
+  let pattern = /PL[\w-]{16,34}|OLAK5uy[\w-]{34}/
+  let playlistId = playlistValue.match(pattern)
 
   if (playlistId) {
     spinner.style.display = 'block'
@@ -16,12 +20,13 @@ playlistForm.addEventListener('submit', async (e) => {
     if (result['duration']) {
       spinner.style.display = 'none'
       resultElem.innerHTML = `<h2>${result['duration']}</h2>`
-    }
+    } 
   } else {
     spinner.style.display = 'none'
     resultElem.innerText = 'Please add a valid link or id.'
   }
 })
+
 
 async function getResult(playlistValue) {
   const response = await fetch('/result', {
@@ -36,5 +41,3 @@ async function getResult(playlistValue) {
   const result = await response.json()
   return result
 }
-
-spinner.style.display = 'none'
