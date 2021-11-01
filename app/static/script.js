@@ -17,12 +17,22 @@ playlistForm.addEventListener('submit', async (e) => {
   if (playlistId) {
     spinner.style.display = 'block'
     let result = await getResult(playlistId[0])
-    if (result['duration']) {
-      spinner.style.display = 'none'
-      resultElem.innerHTML = `<h2>${result['duration']}</h2>`
-    } 
-  } else {
     spinner.style.display = 'none'
+    if (result['duration']) {
+      let meta = ''
+      if (playlistId[0].startsWith('OLAK5uy')) {
+        meta = `<strong>${result['playlist_title']}</strong> (${result['item_count']} items)`
+      } else {
+        meta = `<strong>${result['playlist_title']}</strong> by ${result['channel_title']} (${result['item_count']} items)`
+      }
+      resultElem.innerHTML = `
+        <p>${meta}</p>
+        <h2>${result['duration']}</h2>
+      `
+    } else {
+      resultElem.innerText = 'Unable to get result for this playlist. Maybe it\'s private.'      
+    }
+  } else {
     resultElem.innerText = 'Please add a valid link or id.'
   }
 })

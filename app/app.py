@@ -19,12 +19,12 @@ def home():
 
 @app.route('/result', methods=['POST'])
 def result():
-    """Accept a valid playlist id and return its total duration."""
+    """Accept a valid playlist id and return the playlist's total duration."""
     playlist = request.get_json(silent=True).get('playlist')
     result = get_result(playlist)
     duration = result.get('duration')
     if duration:
-        return jsonify({'duration': duration})
+        return jsonify(result)
     return jsonify({})
 
 
