@@ -1,7 +1,6 @@
 let playlistForm = document.getElementById('playlist-form')
 let playlistInput = document.querySelector('input[name=playlist]')
 let resultElem = document.getElementById('result')
-
 let spinner = document.querySelector('.spinner')
 
 spinner.style.display = 'none'
@@ -18,16 +17,14 @@ playlistForm.addEventListener('submit', async (e) => {
     spinner.style.display = 'block'
     let result = await getResult(playlistId[0])
     spinner.style.display = 'none'
+
     if (result['duration']) {
-      let meta = ''
-      if (playlistId[0].startsWith('OLAK5uy')) {
-        meta = `<strong>${result['playlist_title']}</strong> (${result['item_count']} items)`
-      } else {
-        meta = `<strong>${result['playlist_title']}</strong> by ${result['channel_title']} (${result['item_count']} items)`
-      }
+      let creator = result['channel_title'] ? `by ${result['channel_title']}` : ''
+      let meta = `<strong>${result['playlist_title']}</strong> ${creator} (${result['item_count']}\xa0items)`
+      let totalHours = result['total_hours'] ? `(${result['total_hours']}+ hours)` : ''
       resultElem.innerHTML = `
         <p>${meta}</p>
-        <h2>${result['duration']}</h2>
+        <h2>${result['duration']} ${totalHours}</h2>
       `
     } else {
       resultElem.innerText = 'Unable to get result for this playlist. Maybe it\'s private.'      

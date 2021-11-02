@@ -89,7 +89,7 @@ main {
   width: 100%;
   text-align: center;
   border-radius: var(--b-radius);
-  padding: 0.7rem 0.75rem;
+  padding: 0.8rem;
   margin-bottom: 1.5rem;
   outline: 0 none;
   border: var(--b-width) solid #ccc;
@@ -109,14 +109,19 @@ main {
   margin-bottom: 1.5rem;
 }
 
-.error {
-  color: var(--accent-color);
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  height: 1.3rem;
+  width: 1.3rem;
+  background-color: var(--accent-color);
+  -webkit-mask: url(times.svg) no-repeat 50% 50%;
+  mask: url(times.svg) no-repeat 50% 50%;
+  pointer-events: none;
 }
 
-@media (max-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+input[type="search"]:focus::-webkit-search-cancel-button {
+  opacity: 0.5;
+  pointer-events: all;
 }
 
 .spinner {
@@ -140,4 +145,10 @@ main {
 
 @keyframes spinner {
   to {transform: rotate(360deg);}
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 18px;
+  }
 }

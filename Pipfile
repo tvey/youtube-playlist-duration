@@ -9,6 +9,7 @@ python-dotenv = "*"
 requests = "*"
 requests-cache = "*"
 isodate = "*"
+pytest = "*"
 
 [dev-packages]
 
