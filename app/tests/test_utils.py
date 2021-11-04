@@ -1,12 +1,12 @@
 import pytest
 
-from utils import (
+from app.utils import (
     format_time,
 )
 
 
 @pytest.mark.parametrize(
-    "seconds,result",
+    'seconds,result',
     [
         (60, '1 minute'),
         (3600, '1 hour'),
@@ -23,7 +23,7 @@ def test_format_time_with_valid_params(seconds, result):
     assert format_time(seconds) == result
 
 
-@pytest.mark.parametrize('value', [12345.0, '3600', 'twenty', 0.2])
+@pytest.mark.parametrize('value', ['3600.0', 'twenty'])
 def test_format_time_with_invalid_input(value):
     with pytest.raises(TypeError, match='must be int'):
         format_time(value)
