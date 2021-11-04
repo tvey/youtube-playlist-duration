@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <title>YouTube Playlist Duration</title>
 </head>
 <body class="text-center">
@@ -15,11 +16,14 @@
       <h1>YouTube Playlist Duration</h1>
       <p>Paste a playlist link or id below.</p>
       <form id="playlist-form">
-        <input type="text" name="playlist" placeholder="https://www.youtube.com/playlist?list=ID">
+        <input type="search" id="playlist-input" placeholder="https://www.youtube.com/playlist?list=ID">
         <button type="submit" class="btn">Calculate</button>
       </form>
       <div class="spinner"></div>
       <div id="result"></div>
+      <div id="more">
+        <button>More</button>
+      </div>
     </main>
   </div>
   <script src="{{ url_for('static', filename='script.js') }}"></script>

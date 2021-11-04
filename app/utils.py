@@ -23,7 +23,9 @@ def pluralize(amount, unit):
 
 
 def format_time(seconds):
-    if not isinstance(seconds, int):
+    try:
+        seconds = int(seconds)
+    except ValueError:
         raise TypeError('Duration in seconds must be int.')
     d, s = divmod(seconds, 86400)
     h, s = divmod(s, 3600)
@@ -43,17 +45,16 @@ def format_time(seconds):
             )
         else:
             result = ', '.join((formatted['days'], formatted['minutes']))
-    print(result)
     return result.strip(' ,')
 
 
 def get_total_hours(seconds):
-    h, s = divmod(seconds, 3600)
+    h, _ = divmod(seconds, 3600)
     return h
 
 
 def get_duration(item_ids):
-    """Accept a list of item ids and return their total duration as an int."""
+    """Accept a list of item ids and return their total duration."""
     params = {
         'key': API_KEY,
         'part': ['contentDetails'],
@@ -69,10 +70,20 @@ def get_duration(item_ids):
         isodate.parse_duration(i['contentDetails']['duration']).total_seconds()
         for i in items
     ]
-    return int(sum(durations))
+    return sum(durations)
 
 
 def get_playlist_meta(playlist_id):
+    """Fetch extra data about a playlist.
+
+    The meta data includes:
+        * channel title / playlist creator / artist for music albums
+        * playlist title / album name
+        * items (count and type)
+
+    Need to make extra calls, as neither resource (playlists/playlistItems)
+    returns all the fields wanted for music albums.
+    """
     params = {
         'key': API_KEY,
         'part': ['snippet', 'contentDetails'],
@@ -81,11 +92,12 @@ def get_playlist_meta(playlist_id):
     }
     r = requests.get(f'{BASE_URL}playlists', params=params)
     data = r.json().get('items')[0]
+    item_count = data['contentDetails']['itemCount']
 
     result = {
         'channel_title': data['snippet']['channelTitle'],
         'playlist_title': data['snippet']['title'],
-        'item_count': data['contentDetails']['itemCount'],
+        'item_count': item_count,
     }
 
     if playlist_id.startswith('OLAK5uy'):  # music album
@@ -101,6 +113,10 @@ def get_playlist_meta(playlist_id):
         artist = r.json().get('items')[0]['snippet']['videoOwnerChannelTitle']
         result['channel_title'] = artist.split(' - Topic')[0]
 
+    if playlist_id.startswith('OLAK5uy'):
+        result['items'] = pluralize(item_count, 'song')
+    else:
+        result['items'] = pluralize(item_count, 'item')
     return result
 
 
@@ -109,7 +125,7 @@ def get_result(playlist_id):
 
     Return playlist/album duration as a formatted string based on a valid id
     and some meta data about the playlist.
-    In case of an invalid id return an API error message or an empty string.
+    In case of an invalid id return an API error message and code.
     """
     url = f'{BASE_URL}playlistItems'
     params = {
@@ -128,7 +144,10 @@ def get_result(playlist_id):
 
         if not data.get('items'):
             if data.get('error'):
-                return {'error': data.get('error').get('message')}
+                return {
+                    'error': data.get('error').get('message'),
+                    'code': data.get('error').get('code'),
+                }
             else:
                 return {}
 
@@ -143,15 +162,21 @@ def get_result(playlist_id):
         params['pageToken'] = next_page_token
 
     playlist_meta = get_playlist_meta(playlist_id)  # extra calls
-    d, s = divmod(total_duration, 86400)
+    item_count = playlist_meta['item_count']
+    formatted_duration = format_time(total_duration)
     total_hours = 0
-    if d:
+    if 'day' in formatted_duration:
         total_hours = get_total_hours(total_duration)
 
     return {
-        'duration': format_time(total_duration),
+        'duration': formatted_duration,
         'total_hours': total_hours,
         'playlist_title': playlist_meta.get('playlist_title'),
         'channel_title': playlist_meta.get('channel_title'),
-        'item_count': playlist_meta.get('item_count'),
+        'items': playlist_meta.get('items'),
+        'avg_duration': format_time(total_duration / item_count),
+        'speed_1.25': format_time(total_duration / 1.25),
+        'speed_1.5': format_time(total_duration / 1.5),
+        'speed_1.75': format_time(total_duration / 1.75),
+        'speed_2': format_time(total_duration / 2),
     }

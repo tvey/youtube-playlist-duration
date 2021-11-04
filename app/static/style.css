@@ -43,6 +43,10 @@ h1, h2, p {
   margin-bottom: 0.75rem;
 }
 
+h1 {
+  line-height: 1.4;
+}
+
 .container {
   max-width: var(--max-width);
   overflow: hidden;
@@ -75,7 +79,6 @@ h1, h2, p {
 
 .btn:hover {
   opacity: 1;
-  text-decoration: none;
   border: none;
 }
 
@@ -117,11 +120,41 @@ input[type="search"]::-webkit-search-cancel-button {
   -webkit-mask: url(times.svg) no-repeat 50% 50%;
   mask: url(times.svg) no-repeat 50% 50%;
   pointer-events: none;
+  cursor: pointer;
 }
 
-input[type="search"]:focus::-webkit-search-cancel-button {
+input[type="search"]:focus::-webkit-search-cancel-button,
+input[type="search"]:hover::-webkit-search-cancel-button {
   opacity: 0.5;
   pointer-events: all;
+}
+
+#more {
+  display: none;
+}
+
+#more button {
+  display: block;
+  background: none;
+  color: #777;
+  margin: 0 auto;
+  margin-bottom: 0.75rem;
+  padding: 0.4rem 1rem;
+  border: none;
+  cursor: pointer;
+  transition: border-color .25s ease-in-out;
+}
+
+#more button:hover, 
+#more button:focus {
+  color: var(--light-color);
+}
+
+#more ul {
+  font-size: 0.9rem;
+  text-align: left;
+  line-height: 2;
+  display: inline-block;
 }
 
 .spinner {
@@ -145,10 +178,4 @@ input[type="search"]:focus::-webkit-search-cancel-button {
 
 @keyframes spinner {
   to {transform: rotate(360deg);}
-}
-
-@media (max-width: 768px) {
-  html {
-    font-size: 18px;
-  }
 }
