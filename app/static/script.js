@@ -50,7 +50,7 @@ playlistForm.addEventListener('submit', async (e) => {
         resultElem.innerText = "Playlist is private or doesn't exist."
       }
     } else {
-      resultElem.innerText = 'Unable to get result for this playlist.'
+      resultElem.innerText = 'Unable to get the result.'
     }
   } else {
     resultElem.innerText = 'Please add a valid link or id.'

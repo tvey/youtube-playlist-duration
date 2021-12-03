@@ -1,15 +1,11 @@
 import os
 
 import requests
-import dotenv
 import isodate
 import requests_cache
 
 requests_cache.install_cache('youtube')
 
-dotenv.load_dotenv()
-
-SECRET_KEY = os.environ.get('SECRET_KEY')
 API_KEY = os.environ.get('API_KEY')
 BASE_URL = 'https://www.googleapis.com/youtube/v3/'
 

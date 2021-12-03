@@ -1,3 +1,6 @@
+import os
+
+import dotenv
 from flask import (
     Flask,
     request,
@@ -5,11 +8,25 @@ from flask import (
     jsonify,
 )
 
-from utils import get_result, SECRET_KEY
+from utils import get_result
 
 
-app = Flask(__name__, template_folder='.')
-app.secret_key = SECRET_KEY
+dotenv.load_dotenv()
+
+
+def create_app():
+    app = Flask(__name__, template_folder='.')
+    app.config.from_object(__name__)
+    app.config.update(
+        {
+            'SECRET_KEY': os.environ.get('SECRET_KEY'),
+            'DEBUG': os.environ.get('DEBUG'),
+        }
+    )
+    return app
+
+
+app = create_app()
 
 
 @app.route('/', methods=['GET'])
@@ -26,4 +43,4 @@ def result():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run()

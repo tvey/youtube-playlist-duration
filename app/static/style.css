@@ -152,9 +152,7 @@ input[type="search"]:hover::-webkit-search-cancel-button {
 
 #more ul {
   font-size: 0.9rem;
-  text-align: left;
   line-height: 2;
-  display: inline-block;
 }
 
 .spinner {
