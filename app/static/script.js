@@ -1,8 +1,9 @@
 let playlistForm = document.getElementById('playlist-form')
 let playlistInput = document.getElementById('playlist-input')
 let resultElem = document.getElementById('result')
-let showMore = document.getElementById('more')
-let showMoreBtn = document.querySelector('#more button')
+let more = document.getElementById('more')
+let moreBtn = document.querySelector('#more button')
+let moreUl = document.querySelector('#more ul')
 let spinner = document.querySelector('.spinner')
 
 spinner.style.display = 'none'
@@ -10,7 +11,8 @@ spinner.style.display = 'none'
 playlistForm.addEventListener('submit', async (e) => {
   e.preventDefault()
   resultElem.innerText = ''
-  showMore.style.display = 'none'
+  more.style.display = 'none'
+  moreUl.style.display = 'none'
   let playlistValue = playlistInput.value
   let pattern = /PL[\w-]{16,34}|OLAK5uy[\w-]{34}/
   let playlistId = playlistValue.match(pattern)
@@ -28,23 +30,17 @@ playlistForm.addEventListener('submit', async (e) => {
         <p>${meta}</p>
         <h2>${result['duration']} ${totalHours}</h2>
       `
-      showMore.style.display = 'block'
-      showMoreBtn.addEventListener('click', () => {
-        if (showMore.childElementCount == 1) {
-          let more = document.createElement('ul')
-          more.innerHTML = `
-            <li><strong>Avg duration:</strong> ${result['avg_duration']}</li>
-            <li><strong>1.25x:</strong> ${result['speed_1.25']}</li>
-            <li><strong>1.5x:</strong> ${result['speed_1.5']}</li>
-            <li><strong>1.75x:</strong> ${result['speed_1.75']}</li>
-            <li><strong>2x:</strong> ${result['speed_2']}</li>
-          `
-          showMore.appendChild(more)
-        } else {
-          document.querySelector('#more ul').remove()
-        }
+      more.style.display = 'block'
+      moreUl.innerHTML = `
+        <li><strong>Avg duration:</strong> ${result['avg_duration']}</li>
+        <li><strong>1.25x:</strong> ${result['speed_1.25']}</li>
+        <li><strong>1.5x:</strong> ${result['speed_1.5']}</li>
+        <li><strong>1.75x:</strong> ${result['speed_1.75']}</li>
+        <li><strong>2x:</strong> ${result['speed_2']}</li>
+      `
+      moreBtn.addEventListener('click', () => {
+        moreUl.style.display = 'block'
       })
-
     } else if (result['error']) {
       if (result['code'] == 404) {
         resultElem.innerText = "Playlist is private or doesn't exist."
