@@ -11,9 +11,10 @@ BASE_URL = 'https://www.googleapis.com/youtube/v3/'
 
 
 def pluralize(amount, unit):
+    amount = int(amount)
     if amount == 0:
         return ''
-    elif amount != 1:
+    elif amount > 1:
         unit += 's'
     return f'{amount:.0f} {unit}'
 
@@ -45,7 +46,7 @@ def format_time(seconds):
 
 
 def get_total_hours(seconds):
-    h, _ = divmod(seconds, 3600)
+    h, _ = divmod(int(seconds), 3600)
     return h
 
 
@@ -66,7 +67,7 @@ def get_duration(item_ids):
         isodate.parse_duration(i['contentDetails']['duration']).total_seconds()
         for i in items
     ]
-    return sum(durations)
+    return int(sum(durations))
 
 
 def get_playlist_meta(playlist_id):
@@ -160,6 +161,7 @@ def get_result(playlist_id):
     playlist_meta = get_playlist_meta(playlist_id)  # extra calls
     item_count = playlist_meta['item_count']
     formatted_duration = format_time(total_duration)
+    print(f'Total duration for {playlist_id}: {total_duration}')
     total_hours = 0
     if 'day' in formatted_duration:
         total_hours = get_total_hours(total_duration)

@@ -1,0 +1,75 @@
+{
+    "valid_ids": [
+        "PL3EED4C1D684D3ADF",
+        "PL8dPuuaLjXtNlUrzyH5r6jN9ulIgZBpdo",
+        "PLrAXtmErZgOdP_8GztsuKi9nrraNbKKp4",
+        "PLPNW_gerXa4Pc8S2qoUQc5e8Ir97RLuVW",
+        "PLillGF-RfqbZTASqIqdvm1R5mLrQq79CU",
+        "PLGGpadyh0wS5lyz5o-0GW0hRPjWCUvYNe",
+        "PLKu1CgwkxmXMzqw94fIzOJP3oQnhz7LZs",
+        "PLJ8cMiYb3G5e5L-ozhdRhOPOdwqZorvi3",
+        "PLP2YaOklx3Q1TLzAKlQ68TfeA38NJ5Ug2",
+        "PLivjPDlt6ApTMN635Xm355IDIvLGXZuCq",
+        "PLinZ-R0HoTDh_RdWCnsLO6laL2aghID9k",
+        "PLSQl0a2vh4HBzuNdYIK2teI2Gx-AVAE-q",
+        "PL5uULy4b0kV69hSOeBc4wNIWjqFKz562O",
+        "PLJcaPjxegjBV4aJh4hw3p3yL3CxE2sFXL",
+        "PLP4CSgl7K7oo93I49tQa0TLB8qY3u7xuO",
+        "PLRJdqdXieSHN0U9AdnmwD-9QcR9hmw04d",
+        "PLi01XoE8jYojRqM4qGBF1U90Ee1Ecb5tt",
+        "PLzdnOPI1iJNcsRwJhvksEo1tJqjIqWbN-",
+        "PL8zglt-LDl-jeJzFNj1q4f-t0oWDugPTu",
+        "PLQMVnqe4XbictUtFZK1-gBYvyUzTWJnOk",
+        "PLJ91X-BzNRYlBdl_tRQZyqj0C2zW2KSFT",
+        "OLAK5uy_mgyNkUY0X1gT7Gf_ixCSChkQ5pUFmTivU",
+        "OLAK5uy_lmb-WAvsmslE5dz6AzWq27FVv1RnzMDZc"
+
+    ],
+    "links": [
+        "https://youtube.com/playlist?list=PL8dPuuaLjXtO85Sl24rSiVQ93q7vcntNF",
+        "https://youtu.be/P3wP8v84uqs?list=PL8dPuuaLjXtNdTKZkV_GiIYXpV9w4WxbX",
+        "https://www.youtube.com/embed/videoseries?list=PL8dPuuaLjXtO85Sl24rSiVQ93q7vcntNF",
+        "https://www.youtube.com/watch?v=9I_-ADGrKQo&list=PL8dPuuaLjXtPNZwz5_o_5uirJ8gQXnhEO"
+    ],
+    "finished_playlists": [
+        {
+            "link": "PL3EED4C1D684D3ADF",
+            "duration": 28535
+        },
+        {
+            "link": "PL8dPuuaLjXtNlUrzyH5r6jN9ulIgZBpdo",
+            "duration": 28497
+        },
+        {
+            "link": "PLzdnOPI1iJNcsRwJhvksEo1tJqjIqWbN-",
+            "duration": 1615
+        },
+        {
+            "link": "PLi01XoE8jYojRqM4qGBF1U90Ee1Ecb5tt",
+            "duration": 6558
+        },
+        {
+            "link": "PLRJdqdXieSHN0U9AdnmwD-9QcR9hmw04d",
+            "duration": 40724
+        },
+        {
+            "link": "PLSQl0a2vh4HBzuNdYIK2teI2Gx-AVAE-q",
+            "duration": 32353
+        },
+        {
+            "link": "PL055Epbe6d5b7-vHGiyQJMtKSdjTdQEmN",
+            "duration": 3582
+        },
+        {
+            "link": "OLAK5uy_nUQeZxMf-AFtoNghl4TA6zx8knlRnr05Y",
+            "duration": 2065
+        },
+        {
+            "link": "OLAK5uy_kLawq-zlfCAWvUw0jQopu1dJY5-NqN8Ls",
+            "duration": 3709
+        }
+    ],
+    "long_playlists": [
+        "PLUh4W61bt_K41V-eO_d9_cIdwdbqPi37_"
+    ]
+}

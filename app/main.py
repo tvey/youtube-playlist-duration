@@ -10,7 +10,6 @@ from flask import (
 
 from utils import get_result
 
-
 dotenv.load_dotenv()
 
 
