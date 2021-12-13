@@ -1,16 +1,16 @@
+import asyncio
 import os
+from typing import Union
 
-import requests
 import isodate
-import requests_cache
+from aiohttp_client_cache import CachedSession, SQLiteBackend
 
-requests_cache.install_cache('youtube')
 
 API_KEY = os.environ.get('API_KEY')
 BASE_URL = 'https://www.googleapis.com/youtube/v3/'
 
 
-def pluralize(amount, unit):
+def pluralize(amount: Union[int, float], unit: str) -> str:
     amount = int(amount)
     if amount == 0:
         return ''
@@ -19,7 +19,7 @@ def pluralize(amount, unit):
     return f'{amount:.0f} {unit}'
 
 
-def format_time(seconds):
+def format_time(seconds: Union[int, float]) -> str:
     try:
         seconds = int(seconds)
     except ValueError:
@@ -45,13 +45,13 @@ def format_time(seconds):
     return result.strip(' ,')
 
 
-def get_total_hours(seconds):
+def calc_total_hours(seconds: Union[int, float]) -> int:
     h, _ = divmod(int(seconds), 3600)
     return h
 
 
-def get_duration(item_ids):
-    """Accept a list of item ids and return their total duration."""
+async def get_duration(session: CachedSession, item_ids: list):
+    """Accept a list of at most 50 item ids and return their total duration."""
     params = {
         'key': API_KEY,
         'part': ['contentDetails'],
@@ -59,18 +59,21 @@ def get_duration(item_ids):
         'fields': 'items/contentDetails/duration',
     }
 
-    r = requests.get(f'{BASE_URL}videos', params=params)
-    items = r.json().get('items')
-    if not items:
-        return 0
-    durations = [
-        isodate.parse_duration(i['contentDetails']['duration']).total_seconds()
-        for i in items
-    ]
-    return int(sum(durations))
+    async with session.get(f'{BASE_URL}videos', params=params) as r:
+        data = await r.json()
+        items = data.get('items')
+        if not items:
+            return 0
+        durations = [
+            isodate.parse_duration(
+                i['contentDetails']['duration']
+            ).total_seconds()
+            for i in items
+        ]
+        return int(sum(durations))
 
 
-def get_playlist_meta(playlist_id):
+async def get_playlist_meta(session: CachedSession, playlist_id: str) -> dict:
     """Fetch extra data about a playlist.
 
     The meta data includes:
@@ -87,13 +90,14 @@ def get_playlist_meta(playlist_id):
         'id': playlist_id,
         'fields': 'items(snippet(title,channelTitle),contentDetails/itemCount)',
     }
-    r = requests.get(f'{BASE_URL}playlists', params=params)
-    data = r.json().get('items')[0]
-    item_count = data['contentDetails']['itemCount']
+    async with session.get(f'{BASE_URL}playlists', params=params) as r:
+        data = await r.json()
+        playlist = data.get('items')[0]
+        item_count = playlist['contentDetails']['itemCount']
 
     result = {
-        'channel_title': data['snippet']['channelTitle'],
-        'playlist_title': data['snippet']['title'],
+        'channel_title': playlist['snippet']['channelTitle'],
+        'playlist_title': playlist['snippet']['title'],
         'item_count': item_count,
     }
 
@@ -106,9 +110,10 @@ def get_playlist_meta(playlist_id):
             'playlistId': playlist_id,
             'fields': 'items/snippet/videoOwnerChannelTitle',
         }
-        r = requests.get(f'{BASE_URL}playlistItems', params=params)
-        artist = r.json().get('items')[0]['snippet']['videoOwnerChannelTitle']
-        result['channel_title'] = artist.split(' - Topic')[0]
+        async with session.get(f'{BASE_URL}playlistItems', params=params) as r:
+            data = await r.json()
+            artist = data.get('items')[0]['snippet']['videoOwnerChannelTitle']
+            result['channel_title'] = artist.split(' - Topic')[0]
 
     if playlist_id.startswith('OLAK5uy'):
         result['items'] = pluralize(item_count, 'song')
@@ -117,7 +122,7 @@ def get_playlist_meta(playlist_id):
     return result
 
 
-def get_result(playlist_id):
+async def get_result(playlist_id):
     """Calculate playlist duration.
 
     Return playlist/album duration as a formatted string based on a valid id
@@ -133,38 +138,42 @@ def get_result(playlist_id):
         'fields': 'nextPageToken,items/snippet(resourceId/videoId)',
         'pageToken': '',
     }
-    total_duration = 0
 
-    while True:
-        r = requests.get(url, params=params)
-        data = r.json()
+    async with CachedSession(cache=SQLiteBackend('youtube')) as session:
+        tasks = []
+        while True:
+            async with session.get(url, params=params) as r:
+                data = await r.json()
 
-        if not data.get('items'):
-            if data.get('error'):
-                return {
-                    'error': data.get('error').get('message'),
-                    'code': data.get('error').get('code'),
-                }
-            else:
-                return {}
+            if not data.get('items'):
+                if data.get('error'):
+                    return {
+                        'error': data.get('error').get('message'),
+                        'code': data.get('error').get('code'),
+                    }
+                else:
+                    return {}
+            item_ids = [
+                v['snippet']['resourceId']['videoId'] for v in data['items']
+            ]
+            tasks.append(asyncio.create_task(get_duration(session, item_ids)))
 
-        item_ids = [
-            v['snippet']['resourceId']['videoId'] for v in data['items']
-        ]
-        total_duration += get_duration(item_ids)
-        next_page_token = data.get('nextPageToken')
+            next_page_token = data.get('nextPageToken')
 
-        if not next_page_token:
-            break
-        params['pageToken'] = next_page_token
+            if not next_page_token:
+                break
+            params['pageToken'] = next_page_token
 
-    playlist_meta = get_playlist_meta(playlist_id)  # extra calls
+        duration_results = await asyncio.gather(*tasks)
+        total_duration = sum(duration_results)
+        playlist_meta = await get_playlist_meta(session, playlist_id)
+
     item_count = playlist_meta['item_count']
     formatted_duration = format_time(total_duration)
-    print(f'Total duration for {playlist_id}: {total_duration}')
+    print(f'Total duration for {playlist_id}: {format_time(total_duration)}')
     total_hours = 0
     if 'day' in formatted_duration:
-        total_hours = get_total_hours(total_duration)
+        total_hours = calc_total_hours(total_duration)
 
     return {
         'duration': formatted_duration,

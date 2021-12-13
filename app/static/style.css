@@ -75,6 +75,7 @@ h1 {
   border: none;
   opacity: 0.9;
   transition: all .2s ease-in-out;
+  cursor: pointer;
 }
 
 .btn:hover {

@@ -4,12 +4,15 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
 python-dotenv = "*"
-requests = "*"
-requests-cache = "*"
 isodate = "*"
 pytest = "*"
+pytest-cov = "*"
+flask = {extras = ["async"], version = "*"}
+aiohttp = "*"
+aiohttp-client-cache = "*"
+aiosqlite = "*"
+pytest-aiohttp = "*"
 
 [dev-packages]
 
