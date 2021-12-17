@@ -8,11 +8,13 @@ python-dotenv = "*"
 isodate = "*"
 pytest = "*"
 pytest-cov = "*"
-flask = {extras = ["async"], version = "*"}
 aiohttp = "*"
 aiohttp-client-cache = "*"
 aiosqlite = "*"
 pytest-aiohttp = "*"
+fastapi = "*"
+uvicorn = "*"
+jinja2 = "*"
 
 [dev-packages]
 

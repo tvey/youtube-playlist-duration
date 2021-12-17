@@ -171,7 +171,7 @@ async def get_result(playlist_id):
     item_count = playlist_meta['item_count']
     formatted_duration = format_time(total_duration)
     print(f'Total duration for {playlist_id}: {format_time(total_duration)}')
-    total_hours = 0
+    total_hours = None
     if 'day' in formatted_duration:
         total_hours = calc_total_hours(total_duration)
 

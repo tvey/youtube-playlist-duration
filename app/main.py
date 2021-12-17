@@ -1,45 +1,32 @@
-import os
-
 import dotenv
-from flask import (
-    Flask,
-    request,
-    render_template,
-    jsonify,
-)
+import uvicorn
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from utils import get_result
 
 dotenv.load_dotenv()
 
-
-def create_app():
-    app = Flask(__name__, template_folder='.')
-    app.config.from_object(__name__)
-    app.config.update(
-        {
-            'SECRET_KEY': os.environ.get('SECRET_KEY'),
-            'DEBUG': os.environ.get('DEBUG'),
-        }
-    )
-    return app
+app = FastAPI(debug=True)
+app.mount('/static', StaticFiles(directory='static'), name='static')
+templates = Jinja2Templates(directory='.')
 
 
-app = create_app()
+@app.get('/', response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse('index.html', {'request': request})
 
 
-@app.route('/', methods=['GET'])
-def home():
-    return render_template('index.html')
-
-
-@app.route('/result', methods=['POST'])
-async def result():
-    """Accept a playlist id and return a jsonified result from get_result()."""
-    playlist = request.get_json(silent=True).get('playlist')
+@app.post('/result')
+async def result(request: Request):
+    """Accept a playlist id and return the result from get_result()."""
+    data = await request.json()
+    playlist = data.get('playlist')
     result = await get_result(playlist)
-    return jsonify(result)
+    return result
 
 
 if __name__ == '__main__':
-    app.run()
+    uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=True)
