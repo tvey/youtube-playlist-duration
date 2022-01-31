@@ -6,17 +6,17 @@ name = "pypi"
 [packages]
 python-dotenv = "*"
 isodate = "*"
-pytest = "*"
-pytest-cov = "*"
 aiohttp = "*"
 aiohttp-client-cache = "*"
 aiosqlite = "*"
-pytest-aiohttp = "*"
 fastapi = "*"
 uvicorn = "*"
 jinja2 = "*"
 
 [dev-packages]
+requests = "*"
+pytest = "*"
+pytest-asyncio = "*"
 
 [requires]
 python_version = "3.9"

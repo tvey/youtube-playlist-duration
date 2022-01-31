@@ -3,17 +3,20 @@ import random
 import string
 
 import pytest
+import pytest_asyncio
+from fastapi.testclient import TestClient
 
-from main import app
-
-
-with open('app/tests/data.json') as f:
-    test_data = json.load(f)
+from app.main import app
 
 
-@pytest.fixture
+@pytest_asyncio.fixture(scope='module')
 def client():
-    return app.test_client()
+    client = TestClient(app)
+    yield client
+
+
+with open('tests/data.json') as f:
+    test_data = json.load(f)
 
 
 @pytest.fixture
