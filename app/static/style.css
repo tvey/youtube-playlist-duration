@@ -154,6 +154,7 @@ input[type="search"]:hover::-webkit-search-cancel-button {
 #more ul {
   font-size: 0.9rem;
   line-height: 2;
+  margin-bottom: 2rem;
 }
 
 .spinner {
@@ -177,4 +178,16 @@ input[type="search"]:hover::-webkit-search-cancel-button {
 
 @keyframes spinner {
   to {transform: rotate(360deg);}
+}
+
+@media (max-width: 500px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  h1 {
+    font-size: 1.4rem;
+  }
 }

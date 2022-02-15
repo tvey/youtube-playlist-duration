@@ -1,7 +1,5 @@
 import os
 
-import dotenv
-import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -9,9 +7,7 @@ from fastapi.templating import Jinja2Templates
 
 from .utils import get_result
 
-dotenv.load_dotenv()
-
-app = FastAPI(debug=True)
+app = FastAPI()
 static_path = os.path.join(os.path.dirname(__file__), 'static/')
 app.mount('/static', StaticFiles(directory=static_path), name='static')
 templates = Jinja2Templates(directory='app')
@@ -29,7 +25,3 @@ async def result(request: Request):
     playlist = data.get('playlist')
     result = await get_result(playlist)
     return result
-
-
-if __name__ == '__main__':
-    uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=True)

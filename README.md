@@ -2,6 +2,8 @@
 
 Here's a small yet useful app that calculates the total duration of any public YouTube playlist.
 
+[https://youtube-duration.herokuapp.com/](https://youtube-duration.herokuapp.com/)
+
 As a nice addition to a Chrome extension, it may go handy away from desktop.
 
 It also works with **YouTube Music** albums.

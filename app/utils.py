@@ -2,9 +2,11 @@ import asyncio
 import os
 from typing import Union
 
+import dotenv
 import isodate
 from aiohttp_client_cache import CachedSession, SQLiteBackend
 
+dotenv.load_dotenv()
 
 API_KEY = os.environ.get('API_KEY')
 BASE_URL = 'https://www.googleapis.com/youtube/v3/'
@@ -116,9 +118,10 @@ async def get_playlist_meta(session: CachedSession, playlist_id: str) -> dict:
             result['channel_title'] = artist.split(' - Topic')[0]
 
     if playlist_id.startswith('OLAK5uy'):
-        result['items'] = pluralize(item_count, 'song')
+        items = pluralize(item_count, 'song')
     else:
-        result['items'] = pluralize(item_count, 'item')
+        items = pluralize(item_count, 'item')
+    result['items'] = items.replace(' ', '\u00A0')
     return result
 
 
