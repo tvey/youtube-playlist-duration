@@ -98,8 +98,8 @@ async def get_playlist_meta(session: CachedSession, playlist_id: str) -> dict:
         item_count = playlist['contentDetails']['itemCount']
 
     result = {
-        'channel_title': playlist['snippet']['channelTitle'],
-        'playlist_title': playlist['snippet']['title'],
+        'channel_title': playlist['snippet'].get('channelTitle'),
+        'playlist_title': playlist['snippet'].get('title'),
         'item_count': item_count,
     }
 
@@ -120,7 +120,7 @@ async def get_playlist_meta(session: CachedSession, playlist_id: str) -> dict:
     if playlist_id.startswith('OLAK5uy'):
         items = pluralize(item_count, 'song')
     else:
-        items = pluralize(item_count, 'item')
+        items = pluralize(item_count, 'video')
     result['items'] = items.replace(' ', '\u00A0')
     return result
 
@@ -173,7 +173,6 @@ async def get_result(playlist_id):
 
     item_count = playlist_meta['item_count']
     formatted_duration = format_time(total_duration)
-    print(f'Total duration for {playlist_id}: {format_time(total_duration)}')
     total_hours = None
     if 'day' in formatted_duration:
         total_hours = calc_total_hours(total_duration)
