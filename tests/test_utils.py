@@ -109,7 +109,7 @@ async def test_get_playlist_meta(playlist_id_fix):
         assert result.get('item_count')
         items = result.get('items')
         assert items
-        assert 'items' in items or 'songs' in items
+        assert 'video' in items or 'song' in items
 
 
 @pytest.mark.asyncio
@@ -144,3 +144,14 @@ async def test_get_result_with_invalid_id(invalid_playlist_id_fix):
 async def test_get_result_with_no_id():
     result = await get_result('')
     assert result.get('error')
+
+
+@pytest.mark.asyncio
+async def test_result_on_id_list(playlist_id_list):
+    print(playlist_id_list)
+    for playlist_id in playlist_id_list(size=140):
+        print(playlist_id)
+        result = await get_result(playlist_id)
+        playlist, channel = result['playlist_title'], result['channel_title']
+        print(f'{playlist} ({channel}), {result["duration"]}')
+        assert result

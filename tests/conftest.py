@@ -30,3 +30,14 @@ def invalid_playlist_id_fix():
     chars = string.ascii_letters + string.digits + '-_'
     random_chars = ''.join(random.choices(chars, k=random.randint(10, 30)))
     return f'PL{random_chars}'
+
+
+@pytest.fixture
+def playlist_id_list():
+    def create_id_list(size):
+        valid_ids = test_data['valid_ids']
+        if size:
+            return random.sample(valid_ids, k=size)
+        return random.shuffle(valid_ids)
+
+    return create_id_list
