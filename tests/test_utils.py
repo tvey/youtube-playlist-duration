@@ -12,30 +12,6 @@ from app.utils import (
 
 
 @pytest.mark.parametrize(
-    'seconds,result',
-    [
-        (60, '1 minute'),
-        (3600, '1 hour'),
-        (86400, '1 day'),
-        (10, '10 seconds'),
-        (12345, '3 hours, 25 minutes'),
-        (176400, '2 days, 1 hour'),
-        (1381, '23 minutes, 1 second'),
-        (90000, '1 day, 1 hour'),
-        (0, ''),
-    ],
-)
-def test_format_time_with_valid_params(seconds, result):
-    assert format_time(seconds) == result
-
-
-@pytest.mark.parametrize('value', ['3600.0', 'twenty'])
-def test_format_time_with_invalid_input(value):
-    with pytest.raises(TypeError, match='must be int'):
-        format_time(value)
-
-
-@pytest.mark.parametrize(
     'value,unit,result',
     [
         (21, 'second', '21 seconds'),
@@ -47,6 +23,34 @@ def test_format_time_with_invalid_input(value):
 )
 def test_pluralize(value, unit, result):
     assert pluralize(value, unit) == result
+
+
+@pytest.mark.parametrize(
+    'seconds,result',
+    [
+        (60, '1 minute'),
+        (3600, '1 hour'),
+        (86400, '1 day'),
+        (10, '10 seconds'),
+        (12345, '3 hours, 25 minutes'),
+        (176400, '2 days, 1 hour'),
+        (1381, '23 minutes, 1 second'),
+        (90000, '1 day, 1 hour'),
+        (0, '0 minutes'),
+    ],
+)
+def test_format_time_with_valid_params(seconds, result):
+    print(format_time(seconds))
+    assert format_time(seconds) == result
+
+
+@pytest.mark.parametrize(
+    'value', 
+    ['3600.0', 'twenty', -123]
+)
+def test_format_time_with_invalid_input(value):
+    with pytest.raises((TypeError, ValueError)):
+        format_time(value)
 
 
 @pytest.mark.parametrize(
@@ -131,7 +135,6 @@ async def test_get_result(playlist_id_fix):
     assert result.get('playlist_title')
     assert result.get('channel_title')
     assert result.get('items')
-    assert result.get('avg_duration')
 
 
 @pytest.mark.asyncio
@@ -148,8 +151,7 @@ async def test_get_result_with_no_id():
 
 @pytest.mark.asyncio
 async def test_result_on_id_list(playlist_id_list):
-    print(playlist_id_list)
-    for playlist_id in playlist_id_list(size=140):
+    for playlist_id in playlist_id_list(size=10):
         print(playlist_id)
         result = await get_result(playlist_id)
         playlist, channel = result['playlist_title'], result['channel_title']
