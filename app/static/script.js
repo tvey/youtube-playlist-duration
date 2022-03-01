@@ -30,17 +30,20 @@ playlistForm.addEventListener('submit', async (e) => {
         <p>${meta}</p>
         <h2>${result['duration']} ${totalHours}</h2>
       `
-      more.style.display = 'block'
-      moreUl.innerHTML = `
-        <li><strong>Avg duration:</strong> ${result['avg_duration']}</li>
-        <li><strong>1.25x:</strong> ${result['speed_1.25']}</li>
-        <li><strong>1.5x:</strong> ${result['speed_1.5']}</li>
-        <li><strong>1.75x:</strong> ${result['speed_1.75']}</li>
-        <li><strong>2x:</strong> ${result['speed_2']}</li>
-      `
-      moreBtn.addEventListener('click', () => {
-        moreUl.style.display = 'block'
-      })
+      if (result['avg_duration']) {
+        more.style.display = 'block'
+        moreUl.innerHTML = `
+          <li><strong>Avg duration:</strong> ${result['avg_duration']}</li>
+          <li><strong>1.25x:</strong> ${result['speed_1.25']}</li>
+          <li><strong>1.5x:</strong> ${result['speed_1.5']}</li>
+          <li><strong>1.75x:</strong> ${result['speed_1.75']}</li>
+          <li><strong>2x:</strong> ${result['speed_2']}</li>
+        `
+        moreBtn.addEventListener('click', () => {
+          moreUl.style.display = 'block'
+        })
+      }
+
     } else if (result['error']) {
       if (result['code'] == 404) {
         resultElem.innerText = "Playlist is private or doesn't exist."

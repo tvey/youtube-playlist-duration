@@ -18,7 +18,7 @@ def pluralize(amount: Union[int, float], unit: str) -> str:
         return ''
     elif amount > 1:
         unit += 's'
-    return f'{amount:.0f} {unit}'
+    return f'{amount} {unit}'
 
 
 def format_time(seconds: Union[int, float]) -> str:
@@ -26,6 +26,10 @@ def format_time(seconds: Union[int, float]) -> str:
         seconds = int(seconds)
     except ValueError:
         raise TypeError('Duration in seconds must be int.')
+    if seconds == 0:
+        return '0 minutes'
+    elif seconds < 0:
+        raise ValueError('Duration must be a positive value.')
     d, s = divmod(seconds, 86400)
     h, s = divmod(s, 3600)
     m, s = divmod(s, 60)
@@ -148,14 +152,13 @@ async def get_result(playlist_id):
             async with session.get(url, params=params) as r:
                 data = await r.json()
 
+            if data.get('error'):
+                return {
+                    'error': data.get('error').get('message'),
+                    'code': data.get('error').get('code'),
+                }
             if not data.get('items'):
-                if data.get('error'):
-                    return {
-                        'error': data.get('error').get('message'),
-                        'code': data.get('error').get('code'),
-                    }
-                else:
-                    return {}
+                break
             item_ids = [
                 v['snippet']['resourceId']['videoId'] for v in data['items']
             ]
@@ -177,15 +180,23 @@ async def get_result(playlist_id):
     if 'day' in formatted_duration:
         total_hours = calc_total_hours(total_duration)
 
-    return {
+    result = {
         'duration': formatted_duration,
         'total_hours': total_hours,
         'playlist_title': playlist_meta.get('playlist_title'),
         'channel_title': playlist_meta.get('channel_title'),
-        'items': playlist_meta.get('items'),
-        'avg_duration': format_time(total_duration / item_count),
-        'speed_1.25': format_time(total_duration / 1.25),
-        'speed_1.5': format_time(total_duration / 1.5),
-        'speed_1.75': format_time(total_duration / 1.75),
-        'speed_2': format_time(total_duration / 2),
     }
+
+    if result['duration'] == '0 minutes':
+        result['items'] = '0 available videos'
+    else:
+        result |= {
+            'items': playlist_meta.get('items'),
+            'avg_duration': format_time(total_duration / item_count),
+            'speed_1.25': format_time(total_duration / 1.25),
+            'speed_1.5': format_time(total_duration / 1.5),
+            'speed_1.75': format_time(total_duration / 1.75),
+            'speed_2': format_time(total_duration / 2),
+        }
+
+    return result
