@@ -154,6 +154,9 @@ async def test_result_on_id_list(playlist_id_list):
     for playlist_id in playlist_id_list(size=10):
         print(playlist_id)
         result = await get_result(playlist_id)
-        playlist, channel = result['playlist_title'], result['channel_title']
-        print(f'{playlist} ({channel}), {result["duration"]}')
+        if result.get('error'):
+            print(f'{result.get("code")} {result.get("error")}')
+        else:
+            playlist, channel = result['playlist_title'], result['channel_title']
+            print(f'{playlist} ({channel}), {result["duration"]}')
         assert result
