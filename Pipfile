@@ -4,20 +4,21 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-python-dotenv = "*"
-isodate = "*"
 aiohttp = "*"
 aiohttp-client-cache = "*"
 aiosqlite = "*"
 fastapi = "*"
 uvicorn = "*"
 jinja2 = "*"
+python-dotenv = "*"
+isodate = "*"
 
 [dev-packages]
 requests = "*"
 pytest = "*"
 pytest-asyncio = "*"
 pytest-cov = "*"
+httpx = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"
