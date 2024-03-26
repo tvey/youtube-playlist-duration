@@ -10,6 +10,7 @@ dotenv.load_dotenv()
 
 API_KEY = os.environ.get('API_KEY')
 BASE_URL = 'https://www.googleapis.com/youtube/v3/'
+CACHE_EXPIRE_DAYS = int(os.environ.get('CACHE_EXPIRE_DAYS', '7'))
 
 
 def pluralize(amount: Union[int, float], unit: str) -> str:
@@ -129,7 +130,7 @@ async def get_playlist_meta(session: CachedSession, playlist_id: str) -> dict:
     return result
 
 
-async def get_result(playlist_id):
+async def get_result(playlist_id: str) -> dict:
     """Calculate playlist duration.
 
     Return playlist/album duration as a formatted string based on a valid id
@@ -145,8 +146,10 @@ async def get_result(playlist_id):
         'fields': 'nextPageToken,items/snippet(resourceId/videoId)',
         'pageToken': '',
     }
+    expire = 3600 * 24 * CACHE_EXPIRE_DAYS
+    cache = SQLiteBackend('youtube', expire_after=expire)
 
-    async with CachedSession(cache=SQLiteBackend('youtube')) as session:
+    async with CachedSession(cache=cache) as session:
         tasks = []
         while True:
             async with session.get(url, params=params) as r:
